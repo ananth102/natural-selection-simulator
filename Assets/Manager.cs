@@ -35,7 +35,7 @@ public class Manager : MonoBehaviour
     timRef = GameObject.Find("time_text");
     timeText = timRef.GetComponent<TextMeshProUGUI>();
     gen = 0;
-    mutationRate = 60f; // 0->1
+    mutationRate = 100f; // 0->1
     butt = GameObject.Find("next");
     butt.SetActive(false);
     spawn();
@@ -141,24 +141,36 @@ public class Manager : MonoBehaviour
         for(int i =0;i<listA.Count;i++){
             int prob = Random.Range(0,100);
            // Debug.Log(i +"  "+prob);
-            if(prob <= mutationRate){
-               // Debug.Log("a "+i);
-                listA[i].magnitude*=1.4;
-            }
-            if(prob <= mutationRate/2){
-                listA[i].replacementRate+=0;
-            }
-            if(prob <= mutationRate/3){
-                listA[i].size*=(float)1.3;
-                //Debug.Log(listA[i].size);
-            }
+             if(prob >= mutationRate){
+                if(prob <= mutationRate*0.33){
+                   // Debug.Log("a "+i);
+                    listA[i].magnitude*=1.4;
+                    listA[i].size*=(float)0.9;
+                }
+                if(prob > mutationRate*0.65){
+                    listA[i].replacementRate+=1;
+                }
+                if(prob <= mutationRate*0.66 && prob > mutationRate*0.33){
+                    listA[i].size*=(float)1.3;
+                    listA[i].magnitude*=0.9;
+                    //Debug.Log(listA[i].size);
+                }
+                if(prob == 69){
+                    listA[i].magnitude*=1.2;
+                    listA[i].size*=(float)1.3;
+                }
+                if(prob <= mutationRate*0.2){
+                    listA[i].magnitude*=0.7;
+                    listA[i].size*=(float)0.7;
+                }
+           }
               Vector3 instance = new Vector3(Random.Range(0.5f,19.5f),2.5f,Random.Range(-9.5f,9.5f));
                 sob.Add(Instantiate(animalPrefab,instance,Quaternion.identity));
                 survivedObjects.Add(sob[i].GetComponent<Animal>());
                 sob[i].GetComponent<Animal>().setAttributes(listA[i]);
                 Debug.Log("size after init" + survivedObjects[i].size);
                 if(listA[i].replacementRate > 1){
-                   // for(int y=0;y<listA[i].replacementRate;y++)q.Enqueue(listA[i]);
+                   for(int y=0;y<listA[i].replacementRate;y++)q.Enqueue(listA[i]);
                 }
    
         }
