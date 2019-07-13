@@ -47,8 +47,9 @@ public class Manager : MonoBehaviour
     {
     
 
-    timeText.SetText("Time: "+Time.time);
+    
     generationTime = Time.time - endofLast;
+    timeText.SetText("Time: "+generationTime);
     if(generationTime >= timeAlloted){
         Time.timeScale = 0.0f;
          if(!updated){
@@ -211,5 +212,11 @@ public class Manager : MonoBehaviour
         survivedObjects.Remove(g.GetComponent<Animal>());
         sob.Remove(g);
         Destroy(g);
+    }
+
+    public void restart(){
+        destroyOnScreenObjects();
+        spawn();
+        endofLast = Time.time;
     }
 }

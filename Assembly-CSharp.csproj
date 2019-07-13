@@ -59,6 +59,7 @@
      <Compile Include="Assets\Food.cs" />
      <Compile Include="Assets\Manager.cs" />
      <Compile Include="Assets\nextgenbutton.cs" />
+     <Compile Include="Assets\startup.cs" />
      <Compile Include="Assets\Stats.cs" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
