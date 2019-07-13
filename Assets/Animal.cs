@@ -68,7 +68,7 @@ public class Animal : MonoBehaviour
         }
         if(Name.Equals("animal(Clone)")){
             float otherSize = other.gameObject.GetComponent<Animal>().size;
-            Debug.Log("Encounter" + otherSize + "  " + size);
+          //  Debug.Log("Encounter" + otherSize + "  " + size);
             if(size > otherSize){
                // Debug.Log("Killed other");
                 managerref.destroyAnimal(other.gameObject);

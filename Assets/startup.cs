@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class startup : MonoBehaviour
@@ -12,6 +13,12 @@ public class startup : MonoBehaviour
     GameObject food_slider;
     GameObject title;
     
+    Slider mutation_rate;
+    Slider timeS;
+    Slider food;
+    Slider anim;
+
+
     GameObject time_text;
     Manager m;
     // Start is called before the first frame update
@@ -30,6 +37,10 @@ public class startup : MonoBehaviour
         animal_slider = GameObject.Find("Amount of creatures");
         food_slider  = GameObject.Find("amount of food");
         
+        mutation_rate = mutation_slider.GetComponentInChildren<Slider>();
+        timeS = time_slider.GetComponentInChildren<Slider>();
+        anim = animal_slider.GetComponentInChildren<Slider>();
+        food = food_slider.GetComponentInChildren<Slider>();
 
     }
 
@@ -44,11 +55,17 @@ public class startup : MonoBehaviour
         blur.SetActive(false);
         title.SetActive(false);
 
+        m.mutationRate = (int)(mutation_rate.value*100);
+        m.timeAlloted = 5.0f + timeS.value*20.0f;
+        m.initialAnimNum = 1 + (int)(anim.value*30.0);
+        m.initialfoodNum = 10 + (int)(food.value*100.0);
+
         mutation_slider.SetActive(false);
         time_slider.SetActive(false);
         animal_slider.SetActive(false);
         food_slider.SetActive(false);
         m.restart();
+        m.intro = false;
     }
 
 }

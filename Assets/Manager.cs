@@ -15,6 +15,8 @@ public class Manager : MonoBehaviour
     private TextMeshProUGUI timeText;
     private bool updated = false;
     public float timeAlloted;
+    public int initialAnimNum;
+    public int initialfoodNum;
     // Start is called before the first frame update
     List<Animal> survivedObjects;
     List<GameObject> foodList;
@@ -22,12 +24,14 @@ public class Manager : MonoBehaviour
     public float mutationRate;
     int gen;
     bool pause = false;
+    public bool intro;
     float generationTime;
     float endofLast;
     void Start()
     {
     /**Initialze lists and gameobjects */
     survivedObjects = new List<Animal>();
+    timeAlloted = 10f;
     generationTime = 0;
     endofLast = 0;
     foodList = new List<GameObject>();
@@ -38,6 +42,9 @@ public class Manager : MonoBehaviour
     mutationRate = 100f; // 0->1
     butt = GameObject.Find("next");
     butt.SetActive(false);
+    initialAnimNum = 10;
+    initialfoodNum = 40;
+    intro = true;
     spawn();
 
     }
@@ -46,11 +53,18 @@ public class Manager : MonoBehaviour
     void Update()
     {
     
+    if(Input.GetKeyDown(KeyCode.R)){
+        restart();
+    }
+    if(Input.GetKeyDown(KeyCode.Escape)){
+        Application.Quit();
+    }
 
     
     generationTime = Time.time - endofLast;
-    timeText.SetText("Time: "+generationTime);
+    timeText.SetText("Time: "+generationTime.ToString("F2"));
     if(generationTime >= timeAlloted){
+        if(intro)restart();
         Time.timeScale = 0.0f;
          if(!updated){
              updateList();
@@ -75,7 +89,7 @@ public class Manager : MonoBehaviour
     }
     private void updateList(){
         List<int> ins = new List<int>();
-        Debug.Log("Survivor " +survivedObjects.Count);
+       // Debug.Log("Survivor " +survivedObjects.Count);
         for(int i=0;i<survivedObjects.Count;i++){
              if(!survivedObjects[i].reached){
                  Destroy(sob[i]);
@@ -122,7 +136,7 @@ public class Manager : MonoBehaviour
     private void spawn(){
     
         /**Adds animals */
-        for(int i =0;i<10;i++){
+        for(int i =0;i<initialAnimNum;i++){
             
             Vector3 instance = new Vector3(Random.Range(0.5f,19.5f),2.5f,Random.Range(-9.5f,9f));
             sob.Add(Instantiate(animalPrefab,instance,Quaternion.identity));
@@ -141,9 +155,9 @@ public class Manager : MonoBehaviour
         Queue<Att> q = new Queue<Att>();
         for(int i =0;i<listA.Count;i++){
             int prob = Random.Range(0,100);
-           // Debug.Log(i +"  "+prob);
-             if(prob >= mutationRate){
-                if(prob <= mutationRate*0.33){
+           Debug.Log(i +"  "+prob);
+             if(prob <= mutationRate){
+                if(prob <= mutationRate*0.5){
                    // Debug.Log("a "+i);
                     listA[i].magnitude*=1.4;
                     listA[i].size*=(float)0.9;
@@ -151,10 +165,10 @@ public class Manager : MonoBehaviour
                 if(prob > mutationRate*0.65){
                     listA[i].replacementRate+=1;
                 }
-                if(prob <= mutationRate*0.66 && prob > mutationRate*0.33){
+                if(prob <= mutationRate && prob > mutationRate*0.33){
                     listA[i].size*=(float)1.3;
                     listA[i].magnitude*=0.9;
-                    //Debug.Log(listA[i].size);
+                    Debug.Log(listA[i].size);
                 }
                 if(prob == 69){
                     listA[i].magnitude*=1.2;
@@ -187,7 +201,7 @@ public class Manager : MonoBehaviour
     private void spawnfood(){
         
         /**Adds food */
-        for(int i =0;i<40;i++){
+        for(int i =0;i<initialfoodNum;i++){
             Vector3 instance = new Vector3(Random.Range(0f,20f),1.85f,Random.Range(-10f,10f));
             foodList.Add(Instantiate(foodPrefab,instance,Quaternion.identity));        
         }
@@ -217,6 +231,8 @@ public class Manager : MonoBehaviour
     public void restart(){
         destroyOnScreenObjects();
         spawn();
+        pause = false;
+        Time.timeScale = 1.0f;
         endofLast = Time.time;
     }
 }
